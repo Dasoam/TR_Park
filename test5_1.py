@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-cap = cv2.VideoCapture("C:\\Users\\vibhor\\Downloads\\video.mp4")
+cap = cv2.VideoCapture("C:\\Users\\user\\Downloads\\video.mp4")  # change path
 min_width_rect = 80
 min_height_rect = 80
 line = 550
