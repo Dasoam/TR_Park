@@ -31,13 +31,14 @@ frame_size = (frame_width, frame_height)
 fourcc = cv2.VideoWriter_fourcc(*'mpv4')  # You can change the codec as needed
 out = cv2.VideoWriter(output_path, fourcc, fps, frame_size)
 
+#vechile_cnt={"car":0,"motorbike":0,"truck":0,"bus":0}
 
 while True:
     ret, image = cap.read()  # Read a frame from the input video
     if not ret:
         print("failed")
         break  # Break the loop if no more frames are available
-
+    vechile_cnt = {"car": 0, "motorbike": 0, "truck": 0, "bus": 0}
 #Preprocess image
     blob = cv2.dnn.blobFromImage(image, 1 / 255.0, (416, 416), swapRB=True, crop=False)
 
@@ -74,6 +75,14 @@ while True:
         for i in indices.flatten():
             x, y, w, h = boxes[i]
             label = str(classes[class_ids[i]])
+            if label=="car":
+                vechile_cnt["car"]=vechile_cnt["car"]+1
+            elif label=="motorbike":
+                vechile_cnt["motorbike"] = vechile_cnt["motorbike"] + 1
+            elif label=="bus":
+                vechile_cnt["bus"] = vechile_cnt["bus"] + 1
+            elif label=="truck":
+                vechile_cnt["truck"] = vechile_cnt["truck"] + 1
             confidence = confidences[i]
             cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
             cv2.putText(image, f"{label} {confidence:.2f}", (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
@@ -82,6 +91,7 @@ while True:
        print("Error: VideoWriter is not opened.")
        break
     print("hello")
+    cv2.putText(image,f"cars: {vechile_cnt['car']},bikes: {vechile_cnt['motorbike']},tucks: {vechile_cnt['truck']},bus: {vechile_cnt['bus']}",(10,30),cv2.FONT_HERSHEY_SIMPLEX,0.5,(255,0,0),2)
     out.write(image)
     # cv2.imshow("Object Detection", image)
     #
