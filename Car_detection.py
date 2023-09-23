@@ -8,7 +8,7 @@ with open("coco.names", "r") as f:
     classes = f.read().strip().split("\n")
 
 # Load image
-image = cv2.imread("multi_car.jpg")
+image = cv2.imread("traffic3.jpg")
 
 # Preprocess image
 blob = cv2.dnn.blobFromImage(image, 1 / 255.0, (416, 416), swapRB=True, crop=False)
@@ -24,14 +24,14 @@ outputs = yolo_net.forward(layer_names)
 class_ids = []
 confidences = []
 boxes = []
-
-# Filter detections for cars
+vechiles=["car","motorbike","bus","truck"]
+# Filter detections for vechiles
 for output in outputs:
     for detection in output:
         scores = detection[5:]
         class_id = np.argmax(scores)
         confidence = scores[class_id]
-        if confidence > 0.5 and classes[class_id] == "car":
+        if confidence > 0.4 and classes[class_id] in vechiles:
             center_x, center_y, width, height = map(int, detection[0:4] * np.array([image.shape[1], image.shape[0], image.shape[1], image.shape[0]]))
             x, y = int(center_x - width / 2), int(center_y - height / 2)
             class_ids.append(class_id)
@@ -39,7 +39,7 @@ for output in outputs:
             boxes.append([x, y, int(width), int(height)])
 
 # Apply non-maximum suppression to remove overlapping bounding boxes
-indices = cv2.dnn.NMSBoxes(boxes, confidences, 0.5, 0.4)
+indices = cv2.dnn.NMSBoxes(boxes, confidences, 0.4, 0.4)
 
 # Draw bounding boxes on the image
 if len(indices) > 0:
