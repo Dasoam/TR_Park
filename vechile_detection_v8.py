@@ -17,7 +17,7 @@ frame_size = (frame_width, frame_height)
 # Define the codec and create a VideoWriter object for output video
 fourcc = cv2.VideoWriter_fourcc(*'mpv4')  # You can change the codec as needed
 out = cv2.VideoWriter("output.mp4", fourcc, fps, frame_size)
-results = model.predict(viedo, conf=0.1, iou=0.3, classes=[2, 3, 5, 7],stream=True)
+results = model.predict(viedo, conf=0.5, iou=0.3, classes=[2, 3, 5, 7],stream=True,device=0)
 
 for result in results:
     annote=result.plot()
